@@ -1,4 +1,4 @@
-# Sea Surface
+# Sea Surface 3D
 
 three.js と WebGL2 で描く、FFT ベースのリアルタイム海面シミュレーション。
 
@@ -55,3 +55,11 @@ src/
 
 - ドラッグ: 視点回転
 - ホイール: ズーム
+
+## クレジット
+
+このプロジェクトは [Claude Code](https://claude.com/claude-code) で Claude Opus 5.5 を使って実装しました。
+
+## ライセンス
+
+[MIT](LICENSE) © 2026 t-shiratori
