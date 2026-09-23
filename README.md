@@ -1,10 +1,9 @@
 # Sea Surface 3D
 
 three.js と WebGL2 で描く、FFT ベースのリアルタイム海面シミュレーション。
-
-<img width="700" height="" alt="Image" src="https://github.com/user-attachments/assets/ee3a746f-6acd-4c8b-807e-5e11c31ac9f8" />
-<img width="700" height="" alt="Image" src="https://github.com/user-attachments/assets/1e54dc47-d865-4de7-9af9-bc61eb0ca908" />
-<img width="700" height="" alt="Image" src="https://github.com/user-attachments/assets/b32bf9d9-ec14-4a8a-b371-28bdcde200f9" />
+<img width="700" height="" alt="Image" src="https://github.com/user-attachments/assets/b57babb5-1540-471b-a55c-c72a316ed4c8" />
+<img width="700" height="" alt="Image" src="https://github.com/user-attachments/assets/3297c126-5c80-4320-bda6-86a98bfd74c3" />
+<img width="700" height="" alt="Image" src="https://github.com/user-attachments/assets/9adff918-6201-4b19-838c-c4b7ada14ab8" />
 <img width="700" height="" alt="Image" src="https://github.com/user-attachments/assets/137f7003-fff7-4b87-b755-2f35f3595cf0" />
 <img width="700" height="" alt="Image" src="https://github.com/user-attachments/assets/40e23402-cd61-44bd-aa51-384dec239f35" />
 
