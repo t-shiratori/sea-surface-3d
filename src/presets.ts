@@ -25,10 +25,10 @@ export const PRESETS = {
     sky: {
       elevation: 3,
       azimuth: 188,
-      turbidity: 3,
+      turbidity: 1.5,
       rayleigh: 1.5,
       mieCoefficient: 0.004,
-      mieDirectionalG: 0.5,
+      mieDirectionalG: 0.8,
       cloudCoverage: 0.4,
       cloudDensity: 0.45,
       sunIntensity: 14,
@@ -37,7 +37,7 @@ export const PRESETS = {
     swell: { scale: 0.7, windSpeed: 6, direction: -120, fetch: 600 },
     ocean: { choppiness: 0.9 },
     look: { scatterColor: '#0b5563', roughness: 0.07, fogDensity: 0.00006 },
-    post: { exposure: 0.45, bloomStrength: 0.03, bloomRadius: 0.4, bloomThreshold: 20 },
+    post: { exposure: 0.45, bloomStrength: 0.04, bloomRadius: 0.4, bloomThreshold: 20 },
   },
   Midday: {
     sky: {
@@ -61,10 +61,10 @@ export const PRESETS = {
     sky: {
       elevation: 0.4,
       azimuth: 185,
-      turbidity: 6,
+      turbidity: 1,
       rayleigh: 2,
       mieCoefficient: 0.005,
-      mieDirectionalG: 0.2,
+      mieDirectionalG: 0.8,
       cloudCoverage: 0.5,
       cloudDensity: 0.45,
       sunIntensity: 22,
@@ -73,7 +73,7 @@ export const PRESETS = {
     swell: { scale: 1, windSpeed: 7, direction: -100, fetch: 900 },
     ocean: { choppiness: 0.8 },
     look: { scatterColor: '#0b5563', roughness: 0.06, fogDensity: 0.00008 },
-    post: { exposure: 0.9, bloomStrength: 0.03, bloomRadius: 0.4, bloomThreshold: 10 },
+    post: { exposure: 0.7, bloomStrength: 0.4, bloomRadius: 0.4, bloomThreshold: 8 },
   },
   Storm: {
     sky: {
