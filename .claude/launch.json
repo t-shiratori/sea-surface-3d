@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dev",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": ["-c", "exec /opt/homebrew/bin/mise exec -- pnpm dev --port \"$PORT\" --strictPort"],
+      "port": 5173,
+      "autoPort": true
+    }
+  ]
+}
