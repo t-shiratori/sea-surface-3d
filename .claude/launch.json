@@ -4,7 +4,10 @@
     {
       "name": "dev",
       "runtimeExecutable": "/bin/sh",
-      "runtimeArgs": ["-c", "exec /opt/homebrew/bin/mise exec -- pnpm dev --port \"$PORT\" --strictPort"],
+      "runtimeArgs": [
+        "-c",
+        "exec /opt/homebrew/bin/mise exec -- pnpm dev --port \"$PORT\" --strictPort"
+      ],
       "port": 5173,
       "autoPort": true
     }

@@ -2,10 +2,12 @@ import { GUI } from 'lil-gui';
 import {
   ACESFilmicToneMapping,
   HalfFloatType,
+  MathUtils,
   PerspectiveCamera,
   Scene,
   Timer,
   Vector2,
+  Vector3,
   WebGLRenderer,
   WebGLRenderTarget,
 } from 'three';
@@ -18,7 +20,7 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OceanSimulation, type OceanSettings } from './ocean/OceanSimulation';
 import { OceanSurface, type SurfaceLook } from './ocean/OceanSurface';
 import type { WaveSystem } from './ocean/spectrum';
-import { PRESETS, type PresetName } from './presets';
+import { PRESETS, type PostSettings, type PresetName } from './presets';
 import { HighlightCompressShader } from './shaders/post';
 import { SkyEnvironment, type SkySettings } from './sky/SkyEnvironment';
 
@@ -103,12 +105,13 @@ const look: SurfaceLook = {
   fogDensity: 0.00006,
 };
 
-const postSettings = {
+const defaultPostSettings: PostSettings = {
   exposure: 0.45,
-  bloomStrength: 0.4,
+  bloomStrength: 0.01,
   bloomRadius: 0.4,
   bloomThreshold: 70,
 };
+const postSettings: PostSettings = { ...defaultPostSettings };
 
 // ---------------------------------------------------------------- world
 
@@ -154,26 +157,65 @@ const applyPost = () => {
   bloom.threshold = postSettings.bloomThreshold;
 };
 
-applySky();
-applyLook();
-applyPost();
-
-// ---------------------------------------------------------------- GUI
-
-const gui = new GUI({ title: 'Sea Surface' });
-const presetState = { preset: 'Golden Hour' as PresetName };
-gui.add(presetState, 'preset', Object.keys(PRESETS)).onChange((name: PresetName) => {
+const applyPreset = (name: PresetName) => {
   const preset = PRESETS[name];
   Object.assign(skySettings, preset.sky);
   Object.assign(windSea, preset.wind);
   Object.assign(swell, preset.swell);
   Object.assign(oceanSettings, preset.ocean);
   Object.assign(look, preset.look);
-  postSettings.exposure = preset.exposure;
+  Object.assign(postSettings, defaultPostSettings, preset.post);
   applySky();
   applySpectrum();
   applyLook();
   applyPost();
+};
+
+const presetState: { preset: PresetName } = { preset: 'Golden Hour' };
+applyPreset(presetState.preset);
+
+// ---------------------------------------------------------------- camera turn
+
+const CAMERA_TURN_DURATION = 1.6;
+const cameraTurn = { from: 0, to: 0, progress: 1 };
+const cameraOffset = new Vector3();
+
+/** Starts swinging the camera around its orbit target until it faces the sun. */
+const turnTowardsSun = () => {
+  cameraOffset.subVectors(camera.position, controls.target);
+  const current = Math.atan2(cameraOffset.x, cameraOffset.z);
+  // The camera sits on the opposite side of the target from the sun.
+  const sun = skyEnvironment.sunDirection;
+  const goal = Math.atan2(-sun.x, -sun.z);
+  const shortest = MathUtils.euclideanModulo(goal - current + Math.PI, Math.PI * 2) - Math.PI;
+  cameraTurn.from = current;
+  cameraTurn.to = current + shortest;
+  cameraTurn.progress = 0;
+};
+
+const updateCameraTurn = (delta: number) => {
+  if (cameraTurn.progress >= 1) return;
+  cameraTurn.progress = Math.min(cameraTurn.progress + delta / CAMERA_TURN_DURATION, 1);
+  const t = cameraTurn.progress;
+  const eased = t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
+  const angle = MathUtils.lerp(cameraTurn.from, cameraTurn.to, eased);
+  cameraOffset.subVectors(camera.position, controls.target);
+  const radius = Math.hypot(cameraOffset.x, cameraOffset.z);
+  camera.position.x = controls.target.x + Math.sin(angle) * radius;
+  camera.position.z = controls.target.z + Math.cos(angle) * radius;
+};
+
+// Let the user take over mid-turn.
+controls.addEventListener('start', () => {
+  cameraTurn.progress = 1;
+});
+
+// ---------------------------------------------------------------- GUI
+
+const gui = new GUI({ title: 'Sea Surface' });
+gui.add(presetState, 'preset', Object.keys(PRESETS)).onChange((name: PresetName) => {
+  applyPreset(name);
+  turnTowardsSun();
   for (const controller of gui.controllersRecursive()) controller.updateDisplay();
 });
 
@@ -247,6 +289,7 @@ renderer.setAnimationLoop((timestamp) => {
   const delta = Math.min(timer.getDelta(), 1 / 20);
   elapsed += delta;
 
+  updateCameraTurn(delta);
   controls.update();
   camera.position.y = Math.max(camera.position.y, 2.5);
 
